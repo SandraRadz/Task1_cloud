@@ -48,7 +48,11 @@ public class ConferenceApi {
 
     // TODO 1 Pass the ProfileForm parameter
     // TODO 2 Pass the User parameter
+<<<<<<< HEAD
 	public Profile saveProfile(final User user, ProfileForm profileForm)
+=======
+    public Profile saveProfile(final User user, ProfileForm profileForm)
+>>>>>>> 42203d06661d55a4461def12ed573a06bda96ed3
 			throws UnauthorizedException {
 
 		String userId = "";
@@ -56,6 +60,7 @@ public class ConferenceApi {
 		String displayName = "Your name will go here";
 		TeeShirtSize teeShirtSize = TeeShirtSize.NOT_SPECIFIED;
 
+<<<<<<< HEAD
 
 		
 		// TODO 2
@@ -64,6 +69,14 @@ public class ConferenceApi {
             throw new UnauthorizedException("Authorization required");
         }
 
+=======
+		// TODO 2
+		// If the user is not logged in, throw an UnauthorizedException
+		if (user == null) {
+            throw new UnauthorizedException("Authorization required");
+        }
+
+>>>>>>> 42203d06661d55a4461def12ed573a06bda96ed3
 		// TODO 1
 	    // Set the teeShirtSize to the value sent by the ProfileForm, if sent
         // otherwise leave it as the default value
@@ -90,6 +103,7 @@ public class ConferenceApi {
 
 		// Create a new Profile entity from the
 		// userId, displayName, mainEmail and teeShirtSize
+<<<<<<< HEAD
 		 
 		//Profile profile = new Profile(userId, displayName, mainEmail, teeShirtSize);
 		Profile profile = getProfile(user);
@@ -105,7 +119,16 @@ public class ConferenceApi {
 		// Return the profile
 		return profile;
 	}
+=======
+		Profile profile = new Profile(userId, displayName, mainEmail, teeShirtSize);
 
+		// TODO 3 (In lesson 3)
+		// Save the entity in the datastore
+>>>>>>> 42203d06661d55a4461def12ed573a06bda96ed3
+
+		// Return the profile
+		return profile;
+	}
     /**
      * Returns a Profile object associated with the given user object. The cloud
      * endpoints system automatically inject the User object.
