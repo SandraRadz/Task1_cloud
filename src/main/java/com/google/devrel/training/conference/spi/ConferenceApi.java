@@ -16,11 +16,14 @@ import com.google.api.server.spi.response.ConflictException;
 import com.google.api.server.spi.response.ForbiddenException;
 import com.google.api.server.spi.response.NotFoundException;
 import com.google.api.server.spi.response.UnauthorizedException;
+import com.google.appengine.api.memcache.MemcacheService;
+import com.google.appengine.api.memcache.MemcacheServiceFactory;
 import com.google.appengine.api.taskqueue.Queue;
 import com.google.appengine.api.taskqueue.QueueFactory;
 import com.google.appengine.api.taskqueue.TaskOptions;
 import com.google.appengine.api.users.User;
 import com.google.devrel.training.conference.Constants;
+import com.google.devrel.training.conference.domain.Announcement;
 import com.google.devrel.training.conference.domain.Conference;
 import com.google.devrel.training.conference.domain.Profile;
 import com.google.devrel.training.conference.form.ConferenceForm;
@@ -228,6 +231,21 @@ public class ConferenceApi {
 
         return query.list();
     }
+    
+    @ApiMethod(
+            name="getAnnouncement",
+            path = "announcement",
+            httpMethod = HttpMethod.GET
+    )
+    public Announcement getAnnouncement(){
+        //TODO GET announcement from memcache by key and if it exist return it
+        MemcacheService memcacheService = MemcacheServiceFactory.getMemcacheService();
+        Object message = memcacheService.get(Constants.MEMCACHE_ANNOUNCEMENTS_KEY);
+        if (message != null) {
+            return new Announcement(message.toString());
+        }
+        return null;
+    }
 
     /**
      * Queries against the datastore with the given filters and returns the result.
@@ -305,10 +323,10 @@ public class ConferenceApi {
             throw new UnauthorizedException("Authorization required");
         }
         String userId = user.getUserId();
-        Key<Profile> userKey = Key.create(Profile.class, userId);
-        return ofy().load().type(Conference.class)
-                .ancestor(userKey)
-                .order("name").list();
+        Key userKey = Key.create(Profile.class, userId);
+        Query query = ofy().load().type(Conference.class).ancestor(userKey).order("name");
+
+        return query.list();
     }
 
     /**
